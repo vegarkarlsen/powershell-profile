@@ -1,7 +1,5 @@
 ### PowerShell template profile 
-### Version 1.00 - Vegar Karlsen 
-### 
-### Code is nspired by Tim Sneath <tim@sneath.org>
+### Version 1.03 - Tim Sneath <tim@sneath.org>
 ### From https://gist.github.com/timsneath/19867b12eee7fd5af2ba
 ###
 ### This file should be stored in $PROFILE.CurrentUserAllHosts
@@ -14,8 +12,6 @@
 ###   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 ### This is the default policy on Windows Server 2012 R2 and above for server Windows. For 
 ### more information about execution policies, run Get-Help about_Execution_Policies.
-###
-### ----------------------------------------------------------------------------------------
 
 ## clear console on startup
 Clear-Host
@@ -29,6 +25,13 @@ Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
 # Import Terminal Icons
 Import-Module -Name Terminal-Icons
+
+# Find out if the current user identity is elevated (has admin rights)
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$principal = New-Object Security.Principal.WindowsPrincipal $identity
+$isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+
 
 # If so and the current host is a command line, then change to red color 
 # as warning to user that they are operating in an elevated context
@@ -45,14 +48,31 @@ function sha256 { Get-FileHash -Algorithm SHA256 $args }
 function n { notepad $args }
 
 # Drive shortcuts
+function HKLM: { Set-Location HKLM: }
+function HKCU: { Set-Location HKCU: }
 function Env: { Set-Location Env: }
 
 # Creates drive shortcut for Work Folders, if current user account is using it
-# if (Test-Path "$env:USERPROFILE\Work Folders") {
-#     New-PSDrive -Name Work -PSProvider FileSystem -Root "$env:USERPROFILE\Work Folders" -Description "Work Folders"
-#     function Work: { Set-Location Work: }
-# }
+if (Test-Path "$env:USERPROFILE\Work Folders") {
+    New-PSDrive -Name Work -PSProvider FileSystem -Root "$env:USERPROFILE\Work Folders" -Description "Work Folders"
+    function Work: { Set-Location Work: }
+}
 
+# Set up command prompt and window title. Use UNIX-style convention for identifying 
+# whether user is elevated (root) or not. Window title shows current version of PowerShell
+# and appends [ADMIN] if appropriate for easy taskbar identification
+function prompt { 
+    if ($isAdmin) {
+        "[" + (Get-Location) + "] # " 
+    } else {
+        "[" + (Get-Location) + "] $ "
+    }
+}
+
+$Host.UI.RawUI.WindowTitle = "PowerShell {0}" -f $PSVersionTable.PSVersion.ToString()
+if ($isAdmin) {
+    $Host.UI.RawUI.WindowTitle += " [ADMIN]"
+}
 
 # Does the the rough equivalent of dir /s /b. For example, dirs *.png is dir /s /b *.png
 function dirs {
@@ -62,6 +82,23 @@ function dirs {
         Get-ChildItem -Recurse | Foreach-Object FullName
     }
 }
+
+# Simple function to start a new elevated process. If arguments are supplied then 
+# a single command is started with admin rights; if not then a new admin instance
+# of PowerShell is started.
+# function admin {
+#     if ($args.Count -gt 0) {   
+#         $argList = "& '" + $args + "'"
+#         Start-Process "$psHome\powershell.exe" -Verb runAs -ArgumentList $argList
+#     } else {
+#         Start-Process "$psHome\powershell.exe" -Verb runAs
+#     }
+# }
+
+# Set UNIX-like aliases for the admin command, so sudo <command> will run the command
+# with elevated rights. 
+# Set-Alias -Name su -Value admin
+# Set-Alias -Name sudo -Value admin
 
 
 # Make it easy to edit this profile once it's installed
@@ -73,6 +110,10 @@ function Edit-Profile {
     }
 }
 
+# We don't need these any more; they were just temporary variables to get to $isAdmin. 
+# Delete them to prevent cluttering up the user profile. 
+Remove-Variable identity
+Remove-Variable principal
 
 Function Test-CommandExists {
     Param ($command)
@@ -88,6 +129,8 @@ Function Test-CommandExists {
 # Aliases
 # --------------------
 
+
+
 function ll { Get-ChildItem -Path $pwd -File }
 
 function gcom {
@@ -99,11 +142,9 @@ function lazyg {
     git commit -m "$args"
     git push
 }
-
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
-
 function uptime {
     #Windows Powershell    
     Get-WmiObject win32_operatingsystem | Select-Object csname, @{
@@ -113,12 +154,10 @@ function uptime {
 
         
 }
-
-# function reload-profile {
-#     & $PROFILE
-# }
-
-function Find-File($name) {
+function reload-profile {
+    & $profile
+}
+function find-file($name) {
     Get-ChildItem -recurse -filter "*${name}*" -ErrorAction SilentlyContinue | ForEach-Object {
         $place_path = $_.directory
         Write-Output "${place_path}\${_}"
@@ -130,19 +169,16 @@ function Find-File($name) {
 #     Expand-Archive -Path $fullFile -DestinationPath $pwd
 # }
 
+# function unzip ($file, $out_name = $file){
+#     $fullfile = Get-ChildItem 
+#     Write-Output($fullfile)
 
-# FIXME: does not work
-function unzip ($file, $out_name = $file){
-    $fullfile = Get-ChildItem 
-    Write-Output($fullfile)
-
-    # Write-Output("Extracting", $pwd + $file, "to", $pwd + $outname)
-}
+#     # Write-Output("Extracting", $pwd + $file, "to", $pwd + $outname)
+# }
 
 
 
 
-# FIXME: should output some lines before and after
 function grep($regex, $dir) {
     if ( $dir ) {
         Get-ChildItem $dir | select-string $regex
@@ -150,16 +186,12 @@ function grep($regex, $dir) {
     }
     $input | select-string $regex
 }
-
-
 function touch($file) {
     "" | Out-File $file -Encoding ASCII
 }
 function df {
     get-volume
 }
-
-
 function sed($file, $find, $replace) {
     (Get-Content $file).replace("$find", $replace) | Set-Content $file
 }
@@ -173,8 +205,7 @@ function pkill($name) {
     Get-Process $name -ErrorAction SilentlyContinue | Stop-Process
 }
 function pgrep($name) {
-    try { Get-Process $name -ErrorAction "SilentlyContinue" }
-    catch { Write-Host "Prosess $name does not exist" } 
+    Get-Process $name
 }
 
 
@@ -185,10 +216,12 @@ function poweroff { shutdown /s }
 function reboot { shutdown /r }
 function home {Set-Location "C:\Users\$env:USERNAME\"}
 
+
 Set-Alias activate .\venv\Scripts\activate.ps1 
 
 Set-Alias sudo gsudo 
 
+#Set-Alias grep Select-String 
 
 Set-Alias e explorer.exe 
 
@@ -197,7 +230,7 @@ Set-Alias e explorer.exe
 
 
 ## Final Line to set prompt
-oh-my-posh init pwsh --config "C:\Users\$env:USERNAME\Documents\WindowsPowerShell\powershell-profile\custom_posh_themes\iterm2.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "C:\Users\vegar\Documents\WindowsPowerShell\PSConfig\posh_themes\iterm2.omp.json" | Invoke-Expression
 
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
