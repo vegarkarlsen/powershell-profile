@@ -1,4 +1,12 @@
-#If the file does not exist, create it.
+
+
+# Check if we are running from right github repo:
+$inGithubRepo = git rev-parse --is-inside-work-tree 2>$null
+$inRightFolder = Test-Path -Path "$pwd\Microsoft.PowerShell_profile.ps1"
+$FolderGood = ($inGithubRepo -eq $true) -and ($inRightFolder -eq $true)
+
+
+#If the $PROFILE does not exist, create it.
 if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
     try {
         # Detect Version of Powershell & Create Profile directories if they do not exist.
@@ -12,23 +20,48 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
                 New-Item -Path ($env:userprofile + "\Documents\WindowsPowerShell") -ItemType "directory"
             }
         }
+        
+        # if you are running github from cloned github repo:
+        if ($FolderGood){
+            Copy-Item "$pwd\Microsoft.PowerShell_profile.ps1" -o $PROFILE
+            Write-Host "The profile @ [$PROFILE] has been created."  
+        }
+        # TODO: else: copy from raw github file 
+        else {Write-Host "you are not in a github repository, and the profile-file is currently not availible online"}
 
-        Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -o $PROFILE
-        Write-Host "The profile @ [$PROFILE] has been created."
+
+        # download from ChrisTitusTech's repo
+        # Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -o $PROFILE
+        # Write-Host "The profile @ [$PROFILE] has been created."
     }
     catch {
         throw $_.Exception.Message
     }
 }
-# If the file already exists, show the message and do nothing.
+
+# If the file already exists, take copy of old file and swap with updated version
  else {
-		 Get-Item -Path $PROFILE | Move-Item -Destination oldprofile.ps1
-		 Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -o $PROFILE
-		 Write-Host "The profile @ [$PROFILE] has been created and old profile removed."
+
+        # If you are running github from cloned github repo:
+        if ($FolderGood) {
+            Get-Item -Path $PROFILE | Move-Item -Destination "$pwd\oldprofile.ps1"
+            Copy-Item "$pwd\Microsoft.PowerShell_profile.ps1" -o $PROFILE
+            Write-Host "The profile @ [$PROFILE] has been updated, and old profile have been backed up."  
+        }
+        # TODO: copy from raw link
+        else {
+            Write-Host "you are not in a github repository, and the profile-file is currently not availible online"
+        }
+
+		#  Get-Item -Path $PROFILE | Move-Item -Destination oldprofile.ps1
+		#  Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -o $PROFILE
+		#  Write-Host "The profile @ [$PROFILE] has been created and old profile removed."
  }
+
+# run profile script
 & $profile
 
-# OMP Install
+# Oh My Posh - Install
 #
 winget install -e --accept-source-agreements --accept-package-agreements JanDeDobbeleer.OhMyPosh
 
@@ -45,3 +78,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 # Terminal Icons Install
 #
 Install-Module -Name Terminal-Icons -Repository PSGallery
+
+# TODO: Add more packages if reqired
+#
