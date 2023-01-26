@@ -23,7 +23,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
         
         # if you are running github from cloned github repo:
         if ($FolderGood){
-            Copy-Item "$pwd\Microsoft.PowerShell_profile.ps1" -o $PROFILE
+            Copy-Item -Path "$pwd\Microsoft.PowerShell_profile.ps1" -Destination $PROFILE
             Write-Host "The profile @ [$PROFILE] has been created."  
         }
         # TODO: else: copy from raw github file 
@@ -45,7 +45,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
         # If you are running github from cloned github repo:
         if ($FolderGood) {
             Get-Item -Path $PROFILE | Move-Item -Destination "$pwd\oldprofile.ps1"
-            Copy-Item "$pwd\Microsoft.PowerShell_profile.ps1" -o $PROFILE
+            Copy-Item -Path "$pwd\Microsoft.PowerShell_profile.ps1" -Destination $PROFILE
             Write-Host "The profile @ [$PROFILE] has been updated, and old profile have been backed up."  
         }
         # TODO: copy from raw link
@@ -58,8 +58,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
 		#  Write-Host "The profile @ [$PROFILE] has been created and old profile removed."
  }
 
-# run profile script
-& $profile
+ & $profile 2>$null
 
 # Oh My Posh - Install
 #
@@ -69,10 +68,13 @@ winget install -e --accept-source-agreements --accept-package-agreements JanDeDo
 # You will have to extract and Install this font manually, alternatively use the oh my posh font installer (Must be run as admin)
 # oh-my-posh font install
 # You will also need to set your Nerd Font of choice in your window defaults or in the Windows Terminal Settings.
-Invoke-RestMethod https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/CascadiaCode.zip?WT.mc_id=-blog-scottha -o cove.zip
+$cove_exists = Test-path "$pwd\cove.zip"
+if (! $cove_exists){
+    Invoke-RestMethod https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/CascadiaCode.zip?WT.mc_id=-blog-scottha -OutFile cove.zip
+}
 
 # Choco install
-#
+# TODO: Should not try to install if allerady installed
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
 # Terminal Icons Install
