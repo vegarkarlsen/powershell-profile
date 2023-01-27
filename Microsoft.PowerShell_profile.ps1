@@ -1,7 +1,7 @@
 ### PowerShell template profile 
 ### Version 1.00 - Vegar Karlsen 
 ### 
-### Code is nspired by Tim Sneath <tim@sneath.org>
+### Code inspired by Tim Sneath <tim@sneath.org>
 ### From https://gist.github.com/timsneath/19867b12eee7fd5af2ba
 ###
 ### This file should be stored in $PROFILE.CurrentUserAllHosts
