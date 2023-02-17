@@ -1,7 +1,7 @@
 ### PowerShell template profile 
 ### Version 1.00 - Vegar Karlsen 
 ### 
-### Code inspired by Tim Sneath <tim@sneath.org>
+### Code is nspired by Tim Sneath <tim@sneath.org>
 ### From https://gist.github.com/timsneath/19867b12eee7fd5af2ba
 ###
 ### This file should be stored in $PROFILE.CurrentUserAllHosts
@@ -176,14 +176,23 @@ function pgrep($name) {
     try { Get-Process $name -ErrorAction "SilentlyContinue" }
     catch { Write-Host "Prosess $name does not exist" } 
 }
+function vimconfig { 
+    vim C:\tools\vim\_vimrc 
+}
+function poweroff {
+    shutdown /s 
+}
+function reboot {
+    shutdown /r 
+}
+function home {
+    Set-Location "C:\Users\$env:USERNAME\"
+}
 
-
-# my configs
-
-function vimconfig { vim C:\tools\vim\_vimrc }
-function poweroff { shutdown /s }
-function reboot { shutdown /r }
-function home {Set-Location "C:\Users\$env:USERNAME\"}
+$cpp_log_path = "c:\$env:HOMEPATH\home\school\cpp_TDT4102\log_cpp\log.h"
+function cpp_log{
+    Copy-Item -Path $cpp_log_path -Destination $pwd
+}
 
 Set-Alias activate .\venv\Scripts\activate.ps1 
 
