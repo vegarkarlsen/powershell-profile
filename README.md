@@ -1,2 +1,2 @@
 # powershell-profile
-powershell profile for windwos
+powershell profile for windows

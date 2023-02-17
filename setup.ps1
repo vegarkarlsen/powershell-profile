@@ -21,6 +21,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
             }
         }
         
+        # TODO: make backups with timestamps when changing $profile-file
         # if you are running github from cloned github repo:
         if ($FolderGood){
             Copy-Item -Path "$pwd\Microsoft.PowerShell_profile.ps1" -Destination $PROFILE
@@ -42,6 +43,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
 # If the file already exists, take copy of old file and swap with updated version
  else {
 
+        # TODO: make backups with timestamps when changing $profile-file
         # If you are running github from cloned github repo:
         if ($FolderGood) {
             Get-Item -Path $PROFILE | Move-Item -Destination "$pwd\oldprofile.ps1"

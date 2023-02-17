@@ -189,12 +189,7 @@ Set-Alias activate .\venv\Scripts\activate.ps1
 
 Set-Alias sudo gsudo 
 
-
 Set-Alias e explorer.exe 
-
-
-
-
 
 ## Final Line to set prompt
 oh-my-posh init pwsh --config "C:\Users\$env:USERNAME\Documents\WindowsPowerShell\powershell-profile\custom_posh_themes\iterm2.omp.json" | Invoke-Expression
