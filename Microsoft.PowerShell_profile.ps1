@@ -189,6 +189,7 @@ function home {
     Set-Location "C:\Users\$env:USERNAME\"
 }
 
+# This is to import log to cpp assigments
 $cpp_log_path = "c:\$env:HOMEPATH\home\school\cpp_TDT4102\log_cpp\log.h"
 function cpp_log{
     Copy-Item -Path $cpp_log_path -Destination $pwd
