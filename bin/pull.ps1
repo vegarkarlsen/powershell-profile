@@ -10,6 +10,13 @@ $powershell_profile = "c:\$ENV:HOMEPATH\Documents\WindowsPowershell"
 $path_to_backup_to = "$powershell_profile\powershell-profile\backup\profile_$now"
 $index = 1
 
+if (Test-Path("$powershell_profile\powershell-profile\backup" )){
+    # do nothing
+}
+else{
+    New-Item -ItemType Directory -Path "$powershell_profile\powershell-profile\backup"
+}
+
 
 if( Test-Path($path_to_backup_to) ){
     while (Test-Path($path_to_backup_to)){
