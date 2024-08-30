@@ -1,5 +1,5 @@
+### ----------------------------------------------------------------------------------------
 ### Alias file
-###
 ### ----------------------------------------------------------------------------------------
 
 # If so and the current host is a command line, then change to red color 
@@ -40,10 +40,17 @@ function Edit-Profile {
     if ($host.Name -match "ise") {
         $psISE.CurrentPowerShellTab.Files.Add($profile.CurrentUserAllHosts)
     } else {
-        notepad $profile.CurrentUserAllHosts
+        #notepad $profile.CurrentUserAllHosts
+        nvim $profile.CurrentUserAllHosts
     }
 }
 
+function Edit-alias {
+    nvim "$profile_folder/aliases.ps1"
+}
+Set-Alias malias Edit-alias
+
+# TODO: Missplacesd?
 Function Test-CommandExists {
     Param ($command)
     $oldPreference = $ErrorActionPreference
@@ -57,39 +64,19 @@ function ln ($link, $target){
     New-Item -Path $link -ItemType SymbolicLink -Value $targe
 }
 
-# --------------------
-# Aliases
-# --------------------
-
 function ll { Get-ChildItem -Path $pwd -File }
-
-function gcom {
-    git add .
-    git commit -m "$args"
-}
-function lazyg {
-    git add .
-    git commit -m "$args"
-    git push
-}
 
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
 
 function uptime {
-    #Windows Powershell    
+    #Windows Powershell
     Get-WmiObject win32_operatingsystem | Select-Object csname, @{
         LABEL      = 'LastBootUpTime';
         EXPRESSION = { $_.ConverttoDateTime($_.lastbootuptime) }
     }
-
-        
 }
-
-# function reload-profile {
-#     & $PROFILE
-# }
 
 function Find-File($name) {
     Get-ChildItem -recurse -filter "*${name}*" -ErrorAction SilentlyContinue | ForEach-Object {
@@ -128,49 +115,55 @@ function grep($regex, $dir) {
 function touch($file) {
     "" | Out-File $file -Encoding ASCII
 }
-function df {
-    get-volume
-}
-
 
 function sed($file, $find, $replace) {
     (Get-Content $file).replace("$find", $replace) | Set-Content $file
 }
+
 function which($name) {
     Get-Command $name | Select-Object -ExpandProperty Definition
 }
+
 function export($name, $value) {
     set-item -force -path "env:$name" -value $value;
 }
+
 function pkill($name) {
     Get-Process $name -ErrorAction SilentlyContinue | Stop-Process
 }
+
 function pgrep($name) {
     try { Get-Process $name -ErrorAction "SilentlyContinue" }
-    catch { Write-Host "Prosess $name does not exist" } 
-}
-function vimconfig { 
-    vim C:\tools\vim\_vimrc 
-}
-function poweroff {
-    shutdown /s 
-}
-function reboot {
-    shutdown /r 
-}
-function home {
-    Set-Location "C:\Users\$env:USERNAME\"
+    catch { Write-Host "Prosess $name does not exist" }
 }
 
-# This is to import log to cpp assigments
-$cpp_log_path = "c:\$env:HOMEPATH\home\school\cpp_TDT4102\log_cpp\log.h"
-function cpp_log{
-    Copy-Item -Path $cpp_log_path -Destination $pwd
+function df { get-volume }
+
+function poweroff { shutdown /s }
+
+function reboot { shutdown /r }
+
+
+Remove-Item Alias:cd    # Powershell < v.5
+#Remove-Alias -Name cd   # Powershell > v.6
+function cd {
+    param (
+        [string]$Path
+    )
+
+    if (-not $Path) {
+        Set-Location $env:HOMEPATH
+    } else {
+        Set-Location $Path
+    }
 }
 
-Set-Alias activate .\venv\Scripts\activate.ps1 
+#function activate { .\venv\Scripts\activate.ps1 }
+Set-Alias activate .venv/Scripts/activate.ps1
 
+#function sudo { gsudo }
 Set-Alias sudo gsudo
 
+#function e { explorer.exe $_}
 Set-Alias e explorer.exe
 

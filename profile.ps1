@@ -13,23 +13,32 @@
 ### ----------------------------------------------------------------------------------------
 
 # clear console on startup
-Clear-Host
+#Clear-Host
 
-# diable (venv) on virtualenv activation
-$env:VIRTUAL_ENV_DISABLE_PROMPT = 1
+# ------------------------------------------------------------------------------------------
+#   SETTINGS
+# ------------------------------------------------------------------------------------------
+$env:VIRTUAL_ENV_DISABLE_PROMPT = 1                         # disable python (venv) prompt
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete    # get autocomplete menu on tab
 
-# Shows navigable menu of all options when hitting Tab
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
-# Import Modules
+# ------------------------------------------------------------------------------------------
+#   Import Modules
+# ------------------------------------------------------------------------------------------
 Import-Module -Name Terminal-Icons
 
-# Source config file
+
+# ------------------------------------------------------------------------------------------
+#   Soruce config files
+# ------------------------------------------------------------------------------------------
 $profile_folder = "$env:HOMEPATH/Documents/WindowsPowerShell/powershell-profile"
 
 . "$profile_folder/env.ps1"
 . "$profile_folder/aliases.ps1"
 
-## Final Line to set prompt
+
+# ------------------------------------------------------------------------------------------
+#   Load prompt
+# ------------------------------------------------------------------------------------------
 oh-my-posh init pwsh --config "$profile_folder\custom_posh_themes\iterm2.omp.json" | Invoke-Expression
 
