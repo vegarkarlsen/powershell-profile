@@ -31,14 +31,15 @@ Import-Module -Name Terminal-Icons
 # ------------------------------------------------------------------------------------------
 #   Soruce config files
 # ------------------------------------------------------------------------------------------
-$profile_folder = "$env:HOMEPATH/Documents/WindowsPowerShell/powershell-profile"
+$profile_folder = Split-Path $PROFILE
+$powershell_config = "$profile_folder/windows-config/powershell"
 
-. "$profile_folder/env.ps1"
-. "$profile_folder/aliases.ps1"
+. "$powershell_config/env.ps1"
+. "$powershell_config/aliases.ps1"
 
 
 # ------------------------------------------------------------------------------------------
 #   Load prompt
 # ------------------------------------------------------------------------------------------
-oh-my-posh init pwsh --config "$profile_folder\custom_posh_themes\iterm2.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "$powershell_config\custom_posh_themes\iterm2.omp.json" | Invoke-Expression
 
