@@ -19,8 +19,8 @@
 #   SETTINGS
 # ------------------------------------------------------------------------------------------
 $env:VIRTUAL_ENV_DISABLE_PROMPT = 1                         # disable python (venv) prompt
+Set-PSREadlineOption -EditMOde vi
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete    # get autocomplete menu on tab
-
 
 # ------------------------------------------------------------------------------------------
 #   Import Modules

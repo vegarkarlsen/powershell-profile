@@ -8,13 +8,14 @@
 function cd... { Set-Location ..\.. }
 function cd.... { Set-Location ..\..\.. }
 
-# Compute file hashes - useful for checking successful downloads 
+# Compute file hashes - useful for checking successful downloads
 function md5 { Get-FileHash -Algorithm MD5 $args }
 function sha1 { Get-FileHash -Algorithm SHA1 $args }
 function sha256 { Get-FileHash -Algorithm SHA256 $args }
 
 # Quick shortcut to start notepad
 function n { notepad $args }
+function vim { nvim $args }
 
 # Drive shortcuts
 function Env: { Set-Location Env: }
