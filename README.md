@@ -3,7 +3,7 @@
 This repository containts a collections usefull scripts and configurations for windows.
 
 ## Download
-To download the repository make sure you are in the `$profile` folder which is usually ~/Documents/WindowsPowerShell/ and run the following command:
+To download the repository make sure you are in the `$profile` folder, which is usually found in "~/Documents/WindowsPowerShell/", and run the following command:
 ```powershell
 git clone https://github.com/vegarkarlsen/powershell-profile.git
 ```
