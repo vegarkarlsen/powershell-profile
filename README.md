@@ -19,4 +19,4 @@ NB! The install script has to be run with admin privileges to make the symolic l
 If you dont have the permissions to run the install script you can manually copy the config files to the right directories.
 
 ### Fonts
-I currenlty uses the patched MesloLGS NF font from powerlevel10k. The font can be downloaded direclty from the [powerlevel10k-project](https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#meslo-nerd-font-patched-for-powerlevel10k).
+I currently uses the patched MesloLGS NF font from powerlevel10k. The font can be downloaded direclty from the [powerlevel10k-project](https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#meslo-nerd-font-patched-for-powerlevel10k) on github.
