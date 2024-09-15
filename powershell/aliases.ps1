@@ -47,9 +47,13 @@ function Edit-Profile {
 }
 
 function Edit-alias {
-    nvim "$profile_folder/aliases.ps1"
+    nvim "$powershell_config/aliases.ps1"
 }
 Set-Alias malias Edit-alias
+
+function Edit-nivm {
+    nivm "$env:LocalAppData/nvim"
+}
 
 # TODO: Missplacesd?
 Function Test-CommandExists {
