@@ -2,6 +2,17 @@
 
 This repository containts a collections of usefull scripts and configurations for windows.
 
+## prerequisites
+- WindowsTerminal
+- Git
+- Powershell v 5.1 or later
+
+Powershells defualt execution policy is set to `Restricted`, which means that scripts can't be run, and the config will not work. The execution plolicy can be changed by runing the following command in powershell with admin privileges:
+```powershell
+Set-ExecutionPolicy $POLICY -Scope CurrentUser
+```
+The $POLICY variable needs to be set to something that allows scripts to run, for example `Bypass`. For more information about powershell execution policy see: [Powershell Exectuion Policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4).
+
 ## Download
 To download the repository make sure you are in the `$profile` folder, which is usually found in "~/Documents/WindowsPowerShell/", and run the following command:
 ```powershell
