@@ -4,7 +4,7 @@
     "actions": 
     [
         {
-            "command":
+            "command": 
             {
                 "action": "copy",
                 "singleLine": false
@@ -16,22 +16,55 @@
             "keys": "ctrl+v"
         },
         {
-            "command": "find",
-            "keys": "ctrl+shift+f"
-        },
-        {
             "command": 
             {
                 "action": "splitPane",
                 "split": "auto",
                 "splitMode": "duplicate"
             },
-            "keys": "alt+shift+d"
+            "keys": "ctrl+shift+s"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "left"
+            },
+            "keys": "ctrl+shift+h"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "right"
+            },
+            "keys": "ctrl+shift+l"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "up"
+            },
+            "keys": "ctrl+shift+k"
+        },
+        {
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "down"
+            },
+            "keys": "ctrl+shift+j"
+        },
+        {
+            "command": "find",
+            "keys": "ctrl+shift+f"
         }
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+    "language": "en-US",
     "newTabMenu": 
     [
         {
@@ -45,7 +78,7 @@
             "colorScheme": "Tokyo Night Storm",
             "font": 
             {
-                "face": "CaskaydiaCove Nerd Font Mono"
+                "face": "MesloLGS NF"
             }
         },
         "list": 
@@ -69,28 +102,10 @@
                 "source": "Windows.Terminal.Azure"
             },
             {
-                "guid": "{66a28b50-dc27-5f1a-829c-408eb956f10d}",
-                "hidden": false,
-                "name": "Developer Command Prompt for VS 2022 (2)",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{4e3bfa63-d613-5ce0-96e2-68ce8cc00122}",
-                "hidden": false,
-                "name": "Developer PowerShell for VS 2022 (2)",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{accda16a-d517-5c2d-a06f-36514d11ae10}",
+                "guid": "{16208362-94fc-5b1f-a491-5b2624d5ab56}",
                 "hidden": true,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{1eb3c8ba-9f9e-5595-883a-cacaa15263ca}",
-                "hidden": true,
-                "name": "Developer PowerShell for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
+                "name": "Visual Studio Debug Console",
+                "source": "VSDebugConsole"
             }
         ]
     },
